@@ -8,3 +8,7 @@ Assignment NO: Assignment 2
 
 Task C is a measurement of my ability to use GitHub effectively through proper version and source control, by demonstrating proper branching techniques as well as providing the necessary commentary to any commits made.
 
+
+UPDATE:
+
+Project uploaded will be a "Ping Pong" game. Will demonstrate the use of multiple branches and commits until the game is completed.
