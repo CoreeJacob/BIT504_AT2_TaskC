@@ -3,6 +3,8 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,13 +32,19 @@ import java.awt.event.KeyListener;
          
 	 }
 	 
-	 //method that paints a white rectangle onto the screen - no positioning as of yet
-	 @Override
-	 public void paintComponent(Graphics g) {
-		 
-	     super.paintComponent(g);
-	     g.setColor(Color.WHITE);		//sets the color
-	     g.fillRect(20, 20, 100, 100);	//sets the dimensions of the rectangle
+	 //method which paints the dotted line onto the middle of the screen
+	 private void paintDottedLine(Graphics g) {
+	      Graphics2D g2d = (Graphics2D) g.create();
+	         Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+	         g2d.setStroke(dashed);
+	         g2d.setPaint(Color.WHITE);
+	         g2d.drawLine(getWidth() / 2, 0, getWidth() / 2, getHeight());
+	         g2d.dispose();
+	 }
+	 
+	     
+	     paintDottedLine(g); //paints the dotted line to the screen
+
 	 }
 
 	@Override
