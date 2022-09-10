@@ -42,15 +42,9 @@ import java.awt.event.KeyListener;
 	         g2d.dispose();
 	 }
 	 
-	 //method that paints a white rectangle onto the screen - no positioning as of yet
-	 @Override
-	 public void paintComponent(Graphics g) {
-		 
-	     super.paintComponent(g);
-	     g.setColor(Color.WHITE);		//sets the color
-	     g.fillRect(20, 20, 100, 100);	//sets the dimensions of the rectangle
 	     
 	     paintDottedLine(g); //paints the dotted line to the screen
+
 	 }
 
 	@Override
