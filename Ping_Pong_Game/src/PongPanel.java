@@ -13,9 +13,10 @@ import java.awt.event.KeyListener;
  
  public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	 
-	 //final variable so the color of the background 
+	 //Variables for the color and timer
 	 final static Color BACKGROUND_COLOR = Color.black;
 	 final static int TIMER_DELAY = 5;
+	 
 	 
 	 //constructor for the panel that sits inside the pong window.
 	 public PongPanel() {
@@ -28,12 +29,54 @@ import java.awt.event.KeyListener;
 	         timer.start();
       }
 	 
-	 private void update() {
-         
-	 }
+	 GameState gameState = GameState.INITIALISING;	//setting GameState to initialising - this is so objects load before the game commences
+	 
+	 Ball ball;										//calling the ball object
+	 Paddle paddle1, paddle2;						//calling the paddle objects
+	       
+	  //method which handles the drawing of the objects
+	  public void createObjects() {						
+		  
+	         ball = new Ball(getWidth(), getHeight());
+	         paddle1 = new Paddle(Player.One, getWidth(), getHeight());
+	         paddle2 = new Paddle(Player.Two, getWidth(), getHeight());
+	         
+	         
+	         
+	  }
+	  
+	  //method to paint the objects onto the panel
+	  private void paintSprite(Graphics g, Sprite sprite) {
+		  
+	      g.setColor(sprite.getColor());
+	      g.fillRect(sprite.getxPosition(), sprite.getyPosition(), sprite.getWidth(), sprite.getHeight());
+	  }
+	  
+	  
+	  private void update() {
+		  
+          switch(gameState) {
+          
+              case INITIALISING: {
+            	  
+                  createObjects();
+                 gameState = GameState.PLAYING;
+                  break;
+              }
+              
+              case PLAYING: {
+                  break;
+             }
+              
+             case GAMEOVER: {
+                 break;
+             }
+         }
+     }
 	 
 	 //method which paints the dotted line onto the middle of the screen
 	 private void paintDottedLine(Graphics g) {
+		 
 	      Graphics2D g2d = (Graphics2D) g.create();
 	         Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
 	         g2d.setStroke(dashed);
@@ -42,10 +85,21 @@ import java.awt.event.KeyListener;
 	         g2d.dispose();
 	 }
 	 
-	     
-	     paintDottedLine(g); //paints the dotted line to the screen
+	 //***REMOVED*** previous paint component method - 
+	 
+	 //ADDED new method which calls for the ball to be painted on screen - in the correct position
+	 @Override
+     public void paintComponent(Graphics g) {
+		 
+         super.paintComponent(g);
+         paintDottedLine(g);
+         if(gameState != GameState.INITIALISING) {
+             paintSprite(g, ball);
+             paintSprite(g, paddle1);			//painting the ball and paddle objects
+             paintSprite(g, paddle2);
+         }
+     }
 
-	 }
 
 	@Override
 	public void keyTyped(KeyEvent event) {
