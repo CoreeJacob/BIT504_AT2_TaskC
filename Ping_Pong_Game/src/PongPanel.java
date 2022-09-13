@@ -43,16 +43,17 @@ import java.awt.BasicStroke;
 	}
 
 	  @Override
-      public void keyPressed(KeyEvent event) {
+      public void keyPressed(KeyEvent event) {					//key event - codes for the moving of the paddle following input from the user
           if(event.getKeyCode() == KeyEvent.VK_UP) {
-              paddle2.setyVelocity(-1);
+              paddle2.setyVelocity(-2);
          } else if(event.getKeyCode() == KeyEvent.VK_DOWN) {
-              paddle2.setyVelocity(1);
+              paddle2.setyVelocity(2);
           }
       }
   
      @Override
      public void keyReleased(KeyEvent event) {
+    	 
          if(event.getKeyCode() == KeyEvent.VK_UP || event.getKeyCode() == KeyEvent.VK_DOWN) {
              paddle2.setyVelocity(0);
          }
@@ -94,12 +95,8 @@ import java.awt.BasicStroke;
 	}
 	
 	
-	//creating the ball variable 
 	Ball ball;
-	
-	
-	//variable for the paddles
-	Paddle paddle1;
+	Paddle paddle1;			//creating the ball and paddle variables - these will be painted in another method
 	Paddle paddle2;
 	
 	//method that sets the physical dimensions of the objects - ball and 2 paddles
@@ -112,13 +109,13 @@ import java.awt.BasicStroke;
 			
 	}
 	
-	GameState gameState = GameState.Initialising;
-	
+	GameState gameState = GameState.Initialising;		//sets the initial game state - 
+														// important as changing the game state allows us to control certain variables
 	private void update() {
 		
 		switch(gameState) {
 		
-		case Initialising: {
+		case Initialising: {		//prior to the game starting, creates the objects for the game
 			createObjects();
 			gameState = GameState.Playing;
 			ball.setxVelocity(BALL_MOVE_SPEED);
@@ -131,6 +128,7 @@ import java.awt.BasicStroke;
 			moveObject(paddle2);
 			moveObject(ball);
 			checkWallBounce();
+			checkPaddleBounce();
 			break;
 		}
 		case GameOver:{
@@ -141,7 +139,7 @@ import java.awt.BasicStroke;
 		
 	}
 	
-	//method that paints the Sprite class
+	//method that paints the objects onto the screen - called via the Sprite class
 	private void paintSprite(Graphics g, Sprite sprite) {
 		
 		g.setColor(sprite.getColor());
@@ -156,7 +154,7 @@ import java.awt.BasicStroke;
 		obj.setyPosition(obj.getyPosition() + obj.getyVelocity(), getHeight());
 	}
 	
-	private void checkWallBounce() {
+	private void checkWallBounce() {		//method to check if the ball has hit a 'wall'
 		
 		if (ball.getxPosition() <= 0) {
 			//i.e it hits the left side of the panel
@@ -178,6 +176,19 @@ import java.awt.BasicStroke;
 
 			
 		}
+	}
+	
+	//method which checks for a collision between the ball and the paddle
+	//if the ball and paddle intersect - the balls velocity is changed
+	private void checkPaddleBounce() {
+		
+		 if(ball.getxVelocity() < 0 && ball.getRectangle().intersects(paddle1.getRectangle())) {
+	          ball.setxVelocity(BALL_MOVE_SPEED);
+	      }
+	      if(ball.getxVelocity() > 0 && ball.getRectangle().intersects(paddle2.getRectangle())) {
+	          ball.setxVelocity(-BALL_MOVE_SPEED);
+	      }
+		
 	}
 	
 	
