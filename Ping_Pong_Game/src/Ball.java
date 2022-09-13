@@ -5,7 +5,7 @@
 	   //variables for the ball
        private static final int BALL_WIDTH = 25;
        private static final int BALL_HEIGHT = 25;
-       private static final Color BALL_COLOR = Color.WHITE;
+       private static final Color BALL_COLOR = Color.BLACK;
    
        public Ball(int panelWidth, int panelHeight) {		//constructor for the ball to be used in play
     	   

@@ -5,7 +5,7 @@
 	 //variables for the paddles physical attributes
 	 private static final int PADDLE_WIDTH = 10;
      private static final int PADDLE_HEIGHT = 100;
-     private static final Color PADDLE_COLOR = Color.WHITE;
+     private static final Color PADDLE_COLOR = Color.RED;
      private static final int DISTANCE_FROM_EDGE = 40;
        
        

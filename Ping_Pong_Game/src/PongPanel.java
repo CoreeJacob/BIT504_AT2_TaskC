@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 //series of action and key event 'listeners' that respond to players inputs and moves the paddles along the board
 //also sets game code for ball flight etc
 import java.awt.event.ActionEvent;
@@ -18,10 +19,12 @@ import java.awt.BasicStroke;
   
   public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	  
-		 //Variables for the color, timer and velocity of the ball
-	  private final static Color PANEL_COLOR = Color.BLACK;
+	  private final static Color PANEL_COLOR = Color.WHITE;
 	  private final static int TIMER_DELAY = 5;
 	  private final static int BALL_MOVE_SPEED = 2;
+	  private final static int POINTS_TO_WIN = 3;		//sets the number of points needed to win
+	  int player1Score = 0, player2Score = 0;			//playerscore variables will keep the score for each player
+	  Player gameWinner;
 
 	  
 	  //constructor for the PongPanel class - 
@@ -70,7 +73,13 @@ import java.awt.BasicStroke;
 			paintSprite(g, ball);
 			paintSprite(g, paddle1);
 			paintSprite(g, paddle2);
+            paintScores(g);           
 
+		}
+		
+		if (gameState == GameState.GameOver) {
+			paintWinner(g);
+			
 		}
 		
 	}
@@ -81,10 +90,49 @@ import java.awt.BasicStroke;
 		Graphics2D g2d = (Graphics2D) g.create();
 		Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
         g2d.setStroke(dashed);
-        g2d.setPaint(Color.WHITE);
+        g2d.setPaint(Color.BLACK);
         g2d.drawLine(getWidth() / 2, 0, getWidth() / 2, getHeight());
         g2d.dispose();
 	}
+	
+	//
+	private void paintScores(Graphics g) {
+		 
+		int xPadding = 100;
+        int yPadding = 100;		
+        int fontSize = 50;  
+		
+        Font scoreFont = new Font("Serif", Font.BOLD, fontSize);
+        String leftScore = Integer.toString(player1Score);
+        String rightScore = Integer.toString(player2Score);
+         
+        g.setFont(scoreFont);
+        g.drawString(leftScore, xPadding, yPadding);
+        g.drawString(rightScore, getWidth()-xPadding, yPadding);
+       
+        
+    }
+	
+	 private final static int WINNER_TEXT_X = 200;
+     private final static int WINNER_TEXT_Y = 200;
+     private final static int WINNER_FONT_SIZE = 30;
+     private final static String WINNER_FONT_FAMILY = "Serif";
+     private final static String WINNER_MESSAGE = "Winner!!";
+     
+     private void paintWinner(Graphics g) {
+    	 
+         if(gameWinner != null) {
+             Font winnerFont = new Font(WINNER_FONT_FAMILY, Font.BOLD, WINNER_FONT_SIZE);
+            g.setFont(winnerFont);
+            int xPosition = getWidth() / 2;
+            if(gameWinner == Player.One) {
+                xPosition -= WINNER_TEXT_X;
+            } else if(gameWinner == Player.Two) {
+                xPosition += WINNER_TEXT_X;
+            }
+            g.drawString(WINNER_MESSAGE, xPosition, WINNER_TEXT_Y);
+        }
+    }
 		
 	@Override
 	public void actionPerformed(ActionEvent event) {
@@ -116,22 +164,29 @@ import java.awt.BasicStroke;
 		switch(gameState) {
 		
 		case Initialising: {		//prior to the game starting, creates the objects for the game
+			
 			createObjects();
 			gameState = GameState.Playing;
-			ball.setxVelocity(BALL_MOVE_SPEED);
+			ball.setxVelocity(BALL_MOVE_SPEED);		//setting the x and y velocity of the balls
 			ball.setyVelocity(BALL_MOVE_SPEED);
 			break;
 			
 		}
 		case Playing:{
+			
 			moveObject(paddle1);
 			moveObject(paddle2);
 			moveObject(ball);
-			checkWallBounce();
-			checkPaddleBounce();
+			
+			checkWallBounce();		
+			checkPaddleBounce();	//call to check the wall and paddle bounces
+            checkWin();				// call check win method to see if the game has been won
+
 			break;
 		}
+		
 		case GameOver:{
+			
 			break;
 		}
 		
@@ -152,30 +207,60 @@ import java.awt.BasicStroke;
 		
 		obj.setxPosition(obj.getxPosition() + obj.getxVelocity(), getWidth());
 		obj.setyPosition(obj.getyPosition() + obj.getyVelocity(), getHeight());
+		
 	}
+	
+	//method which adds the score 
+	private void addScore(Player player) {	
+		
+        if(player == Player.One) {
+            player1Score++;
+           
+        } 
+        
+        else if(player == Player.Two) {
+            player2Score++;
+        }
+    }
+	
+	//method to check if a player has won
+	private void checkWin() {
+		 
+         if(player1Score >= POINTS_TO_WIN) {
+             gameWinner = Player.One;
+             gameState = GameState.GameOver;
+             
+         } 
+         
+        else if(player2Score >= POINTS_TO_WIN) {
+             gameWinner = Player.Two;
+             gameState = GameState.GameOver;
+         }
+     }
 	
 	private void checkWallBounce() {		//method to check if the ball has hit a 'wall'
 		
-		if (ball.getxPosition() <= 0) {
-			//i.e it hits the left side of the panel
-			ball.setxVelocity(-ball.getxVelocity());
-			resetBall();
-		}
-		
-		else if (ball.getxPosition() >= getWidth() - ball.getWidth()) {
-			//i.e ball hits the right side of the screen
-			ball.setxVelocity(-ball.getxVelocity());
-			resetBall();
-
+		if(ball.getxPosition() <= 0) {
 			
-		}
+            // Hit left side of screen
+            ball.setxVelocity(-ball.getxVelocity());
+            addScore(Player.Two);
+            resetBall();
+        }
 		
-		if (ball.getyPosition() <= 0 || ball.getyPosition() >= getHeight() - ball.getHeight()) {
-			//i.e ball hits the top or the bottom of the screen
-			ball.setyVelocity(-ball.getyVelocity());
-
+		else if(ball.getxPosition() >= getWidth() - ball.getWidth()) {
 			
-		}
+            // Hit right side of screen
+            ball.setxVelocity(-ball.getxVelocity());
+            addScore(Player.One);
+            resetBall();
+        }
+		
+        if(ball.getyPosition() <= 0 || ball.getyPosition() >= getHeight() - ball.getHeight()) {
+        	
+            // Hit top or bottom of screen
+            ball.setyVelocity(-ball.getyVelocity());
+        }
 	}
 	
 	//method which checks for a collision between the ball and the paddle
