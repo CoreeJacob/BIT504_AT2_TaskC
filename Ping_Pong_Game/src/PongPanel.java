@@ -21,8 +21,8 @@ import java.awt.BasicStroke;
 	  
 	  private final static Color PANEL_COLOR = Color.WHITE;
 	  private final static int TIMER_DELAY = 5;
-	  private final static int BALL_MOVE_SPEED = 2;
-	  private final static int POINTS_TO_WIN = 3;		//sets the number of points needed to win
+	  private final static int BALL_MOVE_SPEED = 3;
+	  private final static int POINTS_TO_WIN = 7;		//sets the number of points needed to win
 	  int player1Score = 0, player2Score = 0;			//playerscore variables will keep the score for each player
 	  Player gameWinner;
 
@@ -48,9 +48,9 @@ import java.awt.BasicStroke;
 	  @Override
       public void keyPressed(KeyEvent event) {					//key event - codes for the moving of the paddle following input from the user
           if(event.getKeyCode() == KeyEvent.VK_UP) {
-              paddle2.setyVelocity(-2);
+              paddle2.setyVelocity(-3);
          } else if(event.getKeyCode() == KeyEvent.VK_DOWN) {
-              paddle2.setyVelocity(2);
+              paddle2.setyVelocity(3);
           }
       }
   
