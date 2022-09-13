@@ -30,20 +30,26 @@ public class Sprite {
 	}
 	
 	//setters that will ensure that the ball and paddles stay within the bounds of the game
-	public void setXPosition(int newX, int panelWidth) {
+	public void setxPosition(int newX, int panelWidth) {
+		
 	       xPosition = newX;
 	       if(xPosition < 0) {
 	           xPosition = 0;
-	       } else if(xPosition + width > panelWidth) {
+	       } 
+	       
+	       else if(xPosition + width > panelWidth) {
 	           xPosition = panelWidth - width;
 	       }
 	 }
 	
-	 public void setYPosition(int newY, int panelHeight) {
+	 public void setyPosition(int newY, int panelHeight) {
 	      yPosition = newY;
+	      
 	      if(yPosition < 0) {
 	          yPosition = 0;
-	      } else if(yPosition + height > panelHeight) {
+	      } 
+	      
+	      else if(yPosition + height > panelHeight) {
 	          yPosition = panelHeight - height;
 	      }
 	 }
@@ -55,7 +61,7 @@ public class Sprite {
 	       
 	 public void resetToInitialPosition() {
 	      setxPosition(initialXPosition);
-	       setyPosition(initialYPosition);
+	      setyPosition(initialYPosition);
 	       
 	 }
 

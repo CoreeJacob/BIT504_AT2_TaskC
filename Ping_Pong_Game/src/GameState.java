@@ -1,8 +1,8 @@
 
 public enum GameState {
 	
-	INITIALISING,
-	PLAYING,
-	GAMEOVER;
+	Initialising,
+	Playing,
+	GameOver;
 
 }
